@@ -1,4 +1,21 @@
-const TreadingSection = () => {
+import React from "react";
+import { useGetAllProductsQuery } from "../../../redux/api/api";
+import { Swiper, SwiperSlide } from "swiper/react";
+// declare module 'swiper/css';
+// declare module 'swiper/css/pagination';
+// declare module 'swiper/css/navigation';
+import { Autoplay, Pagination, Navigation } from "swiper/modules";
+
+const TrendingSection = () => {
+  const { data: allProducts, isLoading } = useGetAllProductsQuery(undefined);
+
+  // If data is loading, show a loading message or spinner
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  const products = allProducts?.data || [];
+
   return (
     <div className="bg-gray-50 py-12">
       {/* Header Section */}
@@ -14,50 +31,69 @@ const TreadingSection = () => {
         </a>
       </div>
 
-      {/* Articles Section */}
+      {/* Swiper Section */}
       <section className="container mx-auto px-6">
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
-          {/* Article Card */}
-          {Array.from({ length: 8 }).map((_, index) => (
-            <article
-              key={index}
-              className="flex flex-col bg-white shadow-lg rounded-lg overflow-hidden transform transition duration-300 hover:shadow-xl hover:-translate-y-2"
-            >
-              <a
-                rel="noopener noreferrer"
-                href="#"
-                aria-label="Trending Article"
-                className="block"
-              >
-                <img
-                  alt="Trending Fashion"
-                  className="object-cover w-full h-48"
-                  src={`https://source.unsplash.com/200x200/?fashion?${
-                    index + 1
-                  }`}
-                />
-              </a>
-              <div className="flex flex-col flex-1 p-4">
+        <Swiper
+          spaceBetween={30}
+          autoplay={{
+            delay: 2500,
+            disableOnInteraction: false,
+          }}
+          navigation={true}
+          modules={[Autoplay, Navigation]}
+          breakpoints={{
+            640: {
+              slidesPerView: 1, // 1 slide on small screens
+            },
+            768: {
+              slidesPerView: 2, // 2 slides on medium screens
+            },
+            1024: {
+              slidesPerView: 4, // 4 slides on large screens
+            },
+          }}
+          className="mySwiper"
+        >
+          {/* Article Cards inside SwiperSlides */}
+          {products.map((product: any) => (
+            <SwiperSlide key={product.id}>
+              <article className="flex flex-col bg-white shadow-lg rounded-lg overflow-hidden transform transition duration-300 hover:shadow-xl hover:-translate-y-2">
                 <a
+                  rel="noopener noreferrer"
                   href="#"
-                  className="text-xs uppercase tracking-wide font-semibold text-violet-600 hover:underline mb-1"
+                  aria-label={`Product: ${product.name}`}
+                  className="block"
                 >
-                  Fashion
+                  <img
+                    alt={product.name}
+                    className="object-cover w-full h-48"
+                    src={product.images[0]} // Display the first image from the product's images array
+                  />
                 </a>
-                <h3 className="text-lg font-semibold text-gray-800 mb-2">
-                  Trending Fashion Insights #{index + 1}
-                </h3>
-                <div className="flex justify-between text-sm text-gray-500">
-                  <span>June {index + 1}, 2020</span>
-                  <span>{index + 2}.1K views</span> {/* Corrected this line */}
+                <div className="flex flex-col flex-1 p-4">
+                  <a
+                    href="#"
+                    className="text-xs uppercase tracking-wide font-semibold text-violet-600 hover:underline mb-1"
+                  >
+                    {/* You can use product.categoryId if you want to display the category */}
+                    Category
+                  </a>
+                  <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                    {product.name} {/* Display the product name */}
+                  </h3>
+                  <div className="flex justify-between text-sm text-gray-500">
+                    <span>${product.price}</span> {/* Display product price */}
+                    <span>{product.ratings}⭐</span>{" "}
+                    {/* Display product ratings */}
+                  </div>
                 </div>
-              </div>
-            </article>
+              </article>
+            </SwiperSlide>
           ))}
-        </div>
+        </Swiper>
       </section>
     </div>
   );
 };
 
-export default TreadingSection;
+export default TrendingSection;
