@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Card, Row, Col, Typography } from "antd";
+import { useGetAllFollowedShopProductsQuery } from "../../../redux/api/api";
+import ProductCard from "../../../components/common/ProductCard/ProductCard";
 
 interface Product {
   id: string;
@@ -13,89 +15,42 @@ interface FollowedShopsProductsProps {
   userId: string;
 }
 
-const followedShopsProductsMock: Product[] = [
-  {
-    id: "1",
-    name: "Wireless Headphones",
-    price: 49.99,
-    image: "https://via.placeholder.com/150",
-    shopId: "shop1",
-  },
-  {
-    id: "2",
-    name: "Smart Watch",
-    price: 129.99,
-    image: "https://via.placeholder.com/150",
-    shopId: "shop2",
-  },
-  {
-    id: "3",
-    name: "Bluetooth Speaker",
-    price: 39.99,
-    image: "https://via.placeholder.com/150",
-    shopId: "shop3",
-  },
-  {
-    id: "4",
-    name: "Gaming Mouse",
-    price: 19.99,
-    image: "https://via.placeholder.com/150",
-    shopId: "shop1",
-  },
-  {
-    id: "5",
-    name: "Mechanical Keyboard",
-    price: 59.99,
-    image: "https://via.placeholder.com/150",
-    shopId: "shop2",
-  },
-  {
-    id: "6",
-    name: "USB-C Hub",
-    price: 25.99,
-    image: "https://via.placeholder.com/150",
-    shopId: "shop3",
-  },
-];
-
 const FollowedProductsSection: React.FC<FollowedShopsProductsProps> = ({
   userId,
 }) => {
   const [followedShopsProducts, setFollowedShopsProducts] = useState<Product[]>(
     []
   );
-  const [loading, setLoading] = useState(true);
 
-  //   useEffect(() => {
-  //     const fetchFollowedShopsProducts = async () => {
-  //       try {
-  //         // Simulated API call to fetch followed shops and their products
-  //         const response = await fetch(
-  //           `/api/users/${userId}/followed-shops-products`
-  //         );
-  //         const data = await response.json();
-  //         setFollowedShopsProducts(data);
-  //         setLoading(false);
-  //       } catch (error) {
-  //         console.error("Error fetching followed shops products:", error);
-  //         setLoading(false);
-  //       }
-  //     };
-
-  //     fetchFollowedShopsProducts();
-  //   }, [userId]);
+  const { data, isLoading, error } = useGetAllFollowedShopProductsQuery({
+    shopId: "9594a846-b662-4528-9852-1a915606eded",
+    customerId: "6fbb8f5c-a7b7-48ac-a707-488732266b80",
+  });
 
   useEffect(() => {
-    // Simulate fetching data
-    setTimeout(() => {
-      setFollowedShopsProducts(followedShopsProductsMock);
-      setLoading(false);
-    }, 1000);
-  }, [userId]);
+    if (data?.success) {
+      const products = data.data.map((item: any) => ({
+        id: item.id,
+        name: item.name,
+        price: item.price,
+        image: item.images[0], // Assuming the first image is used
+        shopId: item.shopId,
+      }));
+      setFollowedShopsProducts(products);
+    }
+  }, [data]);
 
-  if (loading) {
+  if (isLoading) {
     return (
       <Typography.Text>Loading followed shops products...</Typography.Text>
+    );
+  }
+
+  if (error) {
+    return (
+      <Typography.Text type="danger">
+        Failed to load products. Please try again.
+      </Typography.Text>
     );
   }
 
@@ -104,21 +59,22 @@ const FollowedProductsSection: React.FC<FollowedShopsProductsProps> = ({
       <Typography.Title level={3}>
         Products from Followed Shops
       </Typography.Title>
-      <Row gutter={[16, 16]}>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {followedShopsProducts.map((product) => (
-          <Col key={product.id} xs={24} sm={12} md={8} lg={6}>
-            <Card
-              hoverable
-              cover={<img alt={product.name} src={product.image} />}
-            >
-              <Card.Meta
-                title={product.name}
-                description={`$${product.price.toFixed(2)}`}
-              />
-            </Card>
-          </Col>
+          // <Col key={product.id} xs={24} sm={12} md={8} lg={6}>
+          //   <Card
+          //     hoverable
+          //     cover={<img alt={product.name} src={product.image} />}
+          //   >
+          //     <Card.Meta
+          //       title={product.name}
+          //       description={`$${product.price.toFixed(2)}`}
+          //     />
+          //   </Card>
+          // </Col>
+          <ProductCard item={product} />
         ))}
-      </Row>
+      </div>
     </div>
   );
 };

@@ -1,10 +1,6 @@
-import React from "react";
 import { useGetAllProductsQuery } from "../../../redux/api/api";
 import { Swiper, SwiperSlide } from "swiper/react";
-// declare module 'swiper/css';
-// declare module 'swiper/css/pagination';
-// declare module 'swiper/css/navigation';
-import { Autoplay, Pagination, Navigation } from "swiper/modules";
+import { Autoplay, Navigation } from "swiper/modules";
 
 const TrendingSection = () => {
   const { data: allProducts, isLoading } = useGetAllProductsQuery(undefined);

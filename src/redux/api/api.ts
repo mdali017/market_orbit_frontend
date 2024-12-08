@@ -15,16 +15,14 @@ export const baseApi = createApi({
       }),
       providesTags: ["Products"],
     }),
-    // getAllBookings: builder.query({
-    //   query: (payload) => {
-    //     // console.log(payload);
-    //     return {
-    //       url: `/bookings?show_date=${payload.show_date}&show_time_id=${payload.show_time_id}&seat_type_id=${payload.seat_type_id}`,
-    //       method: "GET",
-    //     };
-    //   },
-    //   providesTags: ["Bookings"],
-    // }),
+    getAllFollowedShopProducts: builder.query({
+      query: ({ shopId, customerId }) => ({
+        url: `http://localhost:5000/api/v1/followed-shop/${shopId}/${customerId}`,
+        method: "GET",
+      }),
+      providesTags: ["Products"],
+    }),
+
     // getLastBookings: builder.query({
     //   query: (payload) => {
     //     // console.log(payload);
@@ -170,4 +168,5 @@ export const baseApi = createApi({
   }),
 });
 
-export const { useGetAllProductsQuery } = baseApi;
+export const { useGetAllProductsQuery, useGetAllFollowedShopProductsQuery } =
+  baseApi;
