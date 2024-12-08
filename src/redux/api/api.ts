@@ -6,7 +6,7 @@ export const baseApi = createApi({
     baseUrl: "http://localhost:5000/api/v1",
     // baseUrl: "https://moniharcineplexpimainapi.icicle.dev/api",
   }),
-  tagTypes: ["Products", "Movies", "ShowTime"],
+  tagTypes: ["Products", "Categories", "ShowTime"],
   endpoints: (builder) => ({
     getAllProducts: builder.query({
       query: () => ({
@@ -23,16 +23,15 @@ export const baseApi = createApi({
       providesTags: ["Products"],
     }),
 
-    // getLastBookings: builder.query({
-    //   query: (payload) => {
-    //     // console.log(payload);
-    //     return {
-    //       url: `/last-bookings?show_date=${payload.show_date}&show_time_id=${payload.show_time_id}&seat_type_id=${payload.seat_type_id}`,
-    //       method: "GET",
-    //     };
-    //   },
-    //   providesTags: ["Bookings"],
-    // }),
+    getAllProductCategories: builder.query({
+      query: () => {
+        return {
+          url: `/categories`,
+          method: "GET",
+        };
+      },
+      providesTags: ["Categories"],
+    }),
 
     // getTodaysReport: builder.query({
     //   query: (payload) => {
@@ -168,5 +167,8 @@ export const baseApi = createApi({
   }),
 });
 
-export const { useGetAllProductsQuery, useGetAllFollowedShopProductsQuery } =
-  baseApi;
+export const {
+  useGetAllProductsQuery,
+  useGetAllFollowedShopProductsQuery,
+  useGetAllProductCategoriesQuery,
+} = baseApi;

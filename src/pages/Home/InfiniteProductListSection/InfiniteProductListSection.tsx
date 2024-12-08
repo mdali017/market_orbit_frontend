@@ -1,70 +1,49 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
+import { useGetAllProductsQuery } from "../../../redux/api/api";
 
 interface Product {
   id: string;
   name: string;
   price: number;
-  image: string;
+  images: string[];
   shopId: string;
 }
 
-const sampleProducts: Product[] = [
-  {
-    id: "1",
-    name: "Product 1",
-    price: 29.99,
-    image: "https://via.placeholder.com/150",
-    shopId: "101",
-  },
-  {
-    id: "2",
-    name: "Product 2",
-    price: 39.99,
-    image: "https://via.placeholder.com/150",
-    shopId: "102",
-  },
-  {
-    id: "3",
-    name: "Product 3",
-    price: 19.99,
-    image: "https://via.placeholder.com/150",
-    shopId: "103",
-  },
-  // Add more products as needed for testing
-];
-
 const InfiniteProductListSection: React.FC = () => {
-  const [products, setProducts] = useState<Product[]>(sampleProducts);
+  const [products, setProducts] = useState<Product[]>([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const observerRef = useRef<HTMLDivElement | null>(null);
-
-  // Simulated API call
-  const fetchProducts = useCallback(async () => {
-    if (!hasMore) return;
-
-    setLoading(true);
-    setTimeout(() => {
-      const newProducts: Product[] = sampleProducts.map((product, index) => ({
-        ...product,
-        id: `${product.id}-${page}-${index}`,
-      }));
-      setProducts((prevProducts) => [...prevProducts, ...newProducts]);
-      setHasMore(page < 5); // Stop after 5 pages
-      setLoading(false);
-    }, 1000);
-  }, [page, hasMore]);
+  const { data: allProductsResponse, isLoading } =
+    useGetAllProductsQuery(undefined);
 
   useEffect(() => {
-    fetchProducts();
-  }, [fetchProducts]);
+    if (isLoading || !allProductsResponse?.data) return;
+
+    // Paginate the fetched data
+    const pageSize = 5; // Adjust page size as needed
+    const startIndex = (page - 1) * pageSize;
+    const endIndex = page * pageSize;
+    const newProducts = allProductsResponse.data.slice(startIndex, endIndex);
+
+    setProducts((prev) => [...prev, ...newProducts]);
+    setHasMore(newProducts.length > 0);
+    setLoading(false);
+  }, [allProductsResponse, page]);
+
+  const loadMoreProducts = useCallback(() => {
+    if (hasMore) {
+      setLoading(true);
+      setPage((prev) => prev + 1);
+    }
+  }, [hasMore]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting && hasMore) {
-          setPage((prevPage) => prevPage + 1);
+          loadMoreProducts();
         }
       },
       { threshold: 1.0 }
@@ -79,7 +58,11 @@ const InfiniteProductListSection: React.FC = () => {
         observer.unobserve(observerRef.current);
       }
     };
-  }, [hasMore]);
+  }, [hasMore, loadMoreProducts]);
+
+  if (isLoading && products.length === 0) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="p-4">
@@ -91,7 +74,7 @@ const InfiniteProductListSection: React.FC = () => {
             className="border rounded-lg shadow hover:shadow-lg transition duration-300"
           >
             <img
-              src={product.image}
+              src={product.images[0] || "https://via.placeholder.com/150"}
               alt={product.name}
               className="w-full h-48 object-cover rounded-t-lg"
             />
