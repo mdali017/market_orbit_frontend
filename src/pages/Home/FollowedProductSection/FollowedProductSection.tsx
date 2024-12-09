@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Card, Row, Col, Typography } from "antd";
+import { Typography } from "antd";
 import { useGetAllFollowedShopProductsQuery } from "../../../redux/api/api";
 import ProductCard from "../../../components/common/ProductCard/ProductCard";
 
