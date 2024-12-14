@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useGetAllProductsQuery } from "../../../redux/api/api";
+import ProductCard from "../../../components/common/ProductCard/ProductCard";
 
 interface Product {
   id: string;
@@ -69,20 +70,21 @@ const InfiniteProductListSection: React.FC = () => {
       <h1 className="text-2xl font-bold mb-4">Product List</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {products.map((product) => (
-          <div
-            key={product.id}
-            className="border rounded-lg shadow hover:shadow-lg transition duration-300"
-          >
-            <img
-              src={product.images[0] || "https://via.placeholder.com/150"}
-              alt={product.name}
-              className="w-full h-48 object-cover rounded-t-lg"
-            />
-            <div className="p-4 text-center">
-              <h3 className="text-lg font-medium">{product.name}</h3>
-              <p className="text-gray-500">${product.price.toFixed(2)}</p>
-            </div>
-          </div>
+          // <div
+          //   key={product.id}
+          //   className="border rounded-lg shadow hover:shadow-lg transition duration-300"
+          // >
+          //   <img
+          //     src={product.images[0] || "https://via.placeholder.com/150"}
+          //     alt={product.name}
+          //     className="w-full h-48 object-cover rounded-t-lg"
+          //   />
+          //   <div className="p-4 text-center">
+          //     <h3 className="text-lg font-medium">{product.name}</h3>
+          //     <p className="text-gray-500">${product.price.toFixed(2)}</p>
+          //   </div>
+          // </div>
+          <ProductCard key={product.id} item={product} />
         ))}
       </div>
 
