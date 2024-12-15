@@ -65,6 +65,18 @@ export const baseApi = createApi({
       },
       providesTags: ["Shops"],
     }),
+    // get logged in user shop
+    getLoggedInUserShop: builder.query({
+      
+      query: (userId) => {
+        console.log(userId);
+        return {
+          url: `/shops/user-shops/${userId}`,
+          method: "GET",
+        };
+      },
+      providesTags: ["Shops"],
+    }),
     getAllProductsByShop: builder.query({
       query: (shopId) => {
         return {
@@ -103,4 +115,5 @@ export const {
   useGetAllProductsByShopQuery,
   useUserLoginMutation,
   useCreateUserMutation,
+  useGetLoggedInUserShopQuery,
 } = baseApi;

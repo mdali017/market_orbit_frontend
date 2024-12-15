@@ -9,6 +9,8 @@ import Signup from "../pages/Authentication/Signup";
 import Login from "../pages/Authentication/Login";
 import VendorDashboard from "../pages/Dashboard/VendorDashboard/VendorDashboard";
 import VendorProductsManagement from "../pages/Dashboard/VendorDashboard/ProductManagement/ProductManagement";
+import VendorShopManagement from "../pages/Dashboard/VendorDashboard/VendorShopManagement/VendorShopManagement";
+import VendorDashboardLayout from "../layout/VendorDashboardLayout";
 
 export const router = createBrowserRouter([
   {
@@ -46,11 +48,19 @@ export const router = createBrowserRouter([
     element: <Login />,
   },
   {
-    path: "dashboard/vendor",
-    element: <VendorDashboard />,
+    path: "dashboard",
+    element: <VendorDashboardLayout />,
     children: [
       {
-        path: "products",
+        path: "vendor",
+        element: <VendorDashboard />,
+      },
+      {
+        path: "vendor/shop",
+        element: <VendorShopManagement />,
+      },
+      {
+        path: "vendor/products",
         element: <VendorProductsManagement />,
       },
     ],

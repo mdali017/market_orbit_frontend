@@ -1,86 +1,73 @@
-import React, { useState } from "react";
-import { Layout, Menu, Avatar, Dropdown } from "antd";
-import {
-  ShopOutlined,
-  ProductOutlined,
-  MessageOutlined,
-  OrderedListOutlined,
-  UserOutlined,
-  LogoutOutlined,
-} from "@ant-design/icons";
-import { Link, Outlet, useNavigate } from "react-router-dom";
+import React from "react";
+import { Card, Col, Row } from "antd";
+import { DollarOutlined, ShoppingCartOutlined, StarOutlined, InboxOutlined, LineChartOutlined } from "@ant-design/icons";
+// import { useGetLoggedInUserShopQuery } from "../../../redux/api/api";
 
-const { Header, Sider, Content } = Layout;
+const stats = [
+  {
+    title: "Total Sales",
+    value: "$15,300",
+    icon: <DollarOutlined style={{ color: "#4caf50", fontSize: 24 }} />,
+  },
+  {
+    title: "Total Orders",
+    value: "256 Orders",
+    icon: <ShoppingCartOutlined style={{ color: "#1890ff", fontSize: 24 }} />,
+  },
+  {
+    title: "Pending Orders",
+    value: "42 Orders",
+    icon: <InboxOutlined style={{ color: "#ff9800", fontSize: 24 }} />,
+  },
+  {
+    title: "Completed Orders",
+    value: "200 Orders",
+    icon: <LineChartOutlined style={{ color: "#673ab7", fontSize: 24 }} />,
+  },
+  {
+    title: "Average Rating",
+    value: "4.5/5",
+    icon: <StarOutlined style={{ color: "#ff5722", fontSize: 24 }} />,
+  },
+  {
+    title: "Products Listed",
+    value: "120 Products",
+    icon: <InboxOutlined style={{ color: "#2196f3", fontSize: 24 }} />,
+  },
+];
 
 const VendorDashboard: React.FC = () => {
-  const [collapsed, setCollapsed] = useState(false);
-  const navigate = useNavigate();
-
-  const profileMenu = (
-    <Menu>
-      <Menu.Item key="profile" icon={<UserOutlined />}>
-        Profile
-      </Menu.Item>
-      <Menu.Item key="logout" icon={<LogoutOutlined />} danger>
-        Logout
-      </Menu.Item>
-    </Menu>
-  );
-
   return (
-    <Layout className="min-h-screen">
-      <Sider
-        collapsible
-        collapsed={collapsed}
-        onCollapse={(value) => setCollapsed(value)}
-        className="bg-gray-800"
-      >
-        <div className="vendor-logo p-4 text-center">
-          {!collapsed ? (
-            <h1 className="text-white text-xl font-bold">Vendor Portal</h1>
-          ) : (
-            <ShopOutlined className="text-white text-2xl" />
-          )}
-        </div>
-        <Menu
-          theme="dark"
-          mode="inline"
-          defaultSelectedKeys={["dashboard"]}
-          className="bg-gray-800"
-        >
-          <Menu.Item key="dashboard" icon={<ShopOutlined />}>
-            <Link to="/vendor/dashboard">Dashboard</Link>
-          </Menu.Item>
-          <Menu.Item key="Shop " icon={<ProductOutlined />}>
-            <Link to="/shop/products">Shop </Link>
-          </Menu.Item>
-          <Menu.Item key="Products " icon={<ProductOutlined />}>
-            <Link to="/vendor/products">Products </Link>
-          </Menu.Item>
-          <Menu.Item key="Orders " icon={<OrderedListOutlined />}>
-            <Link to="/vendor/orders">Orders </Link>
-          </Menu.Item>
-          <Menu.Item key="reviews" icon={<MessageOutlined />}>
-            <Link to="/vendor/reviews">Reviews</Link>
-          </Menu.Item>
-        </Menu>
-      </Sider>
-
-      <Layout>
-        <Header className="bg-white p-0 flex justify-end items-center pr-6">
-          <Dropdown overlay={profileMenu} placement="bottomRight">
-            <div className="cursor-pointer flex items-center">
-              <Avatar icon={<UserOutlined />} className="mr-2" />
-              <span className="text-gray-700">Vendor Name</span>
-            </div>
-          </Dropdown>
-        </Header>
-
-        <Content className="m-4 p-6 bg-white rounded-lg shadow-md">
-          <Outlet />
-        </Content>
-      </Layout>
-    </Layout>
+    <div style={{ padding: "24px" }}>
+      <h1 style={{ marginBottom: "16px" }}>Vendor Dashboard</h1>
+      
+      {/* Statistics Section */}
+      <Row gutter={[16, 16]}>
+        {stats.map((stat, index) => (
+          <Col xs={24} sm={12} md={8} lg={6} key={index}>
+            <Card
+              bordered={false}
+              style={{
+                borderRadius: "8px",
+                boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+              }}
+            >
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <div style={{ marginRight: "16px" }}>{stat.icon}</div>
+                <div>
+                  <h3 style={{ margin: 0, fontSize: "16px", color: "#555" }}>
+                    {stat.title}
+                  </h3>
+                  <p style={{ margin: 0, fontSize: "18px", fontWeight: "bold" }}>
+                    {stat.value}
+                  </p>
+                </div>
+              </div>
+            </Card>
+          </Col>
+        ))}
+      </Row>
+    </div>
   );
 };
 
