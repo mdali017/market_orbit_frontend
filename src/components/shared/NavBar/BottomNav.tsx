@@ -7,16 +7,16 @@ const BottomNavigation = () => {
   const navigate = useNavigate();
 
   const menuItems = [
-    { id: 1, name: "Pokémon", url: "#" },
-    { id: 2, name: "Magic", url: "#" },
-    { id: 3, name: "One Piece", url: "#", isHighlighted: true },
-    { id: 4, name: "Lorcana", url: "#" },
-    { id: 5, name: "Dragon Ball Super", url: "#" },
+    { id: 1, name: "Home", url: "/" },
+    { id: 2, name: "Shop", url: "/" },
+    { id: 3, name: "All Products", url: "/all-products", isHighlighted: false },
+    { id: 4, name: "Be A Seller", url: "/auth/signup" },
+    { id: 5, name: "About", url: "/" },
     {
       id: 6,
-      name: "More",
+      name: "Contact",
       url: "#",
-      hasDropdown: true,
+      hasDropdown: false,
       subMenu: [
         { id: 1, name: "Sports", url: "/sports" },
         { id: 2, name: "Accessories", url: "/accessories" },

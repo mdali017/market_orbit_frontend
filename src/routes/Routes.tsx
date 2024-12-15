@@ -11,6 +11,7 @@ import VendorDashboard from "../pages/Dashboard/VendorDashboard/VendorDashboard"
 import VendorProductsManagement from "../pages/Dashboard/VendorDashboard/ProductManagement/ProductManagement";
 import VendorShopManagement from "../pages/Dashboard/VendorDashboard/VendorShopManagement/VendorShopManagement";
 import VendorDashboardLayout from "../layout/VendorDashboardLayout";
+import AllProducts from "../pages/AllProducts/AllProducts";
 
 export const router = createBrowserRouter([
   {
@@ -36,6 +37,10 @@ export const router = createBrowserRouter([
       {
         path: "/checkout",
         element: <Checkout />,
+      },
+      {
+        path: "/all-products",
+        element: <AllProducts />,
       },
     ],
   },
